@@ -34,7 +34,7 @@ for i in range(1, 30):
     avg_cell.number_format = "0.00"
     
     grade_cell = ws.cell(row=row, column=8)
-    grade_cell.value = f'=IF(G{row}="","",IF(G{row}>=90,"優",IF(G{row}>=80,"甲",IF(G{row}>=70,"乙",IF(G{row}>=60,"丙","丁")))))'
+    grade_cell.value = f'=IF(G{row}="","",IF(G{row}=100,"100",IF(G{row}>=90,"90-99",IF(G{row}>=80,"80-89",IF(G{row}>=70,"70-79",IF(G{row}>=60,"60-69","未滿60"))))))'
     grade_cell.font = Font(name="Microsoft JhengHei")
     grade_cell.alignment = Alignment(horizontal="center")
 
@@ -53,14 +53,14 @@ for col in range(2, 8):
     cell.fill = PatternFill("solid", fgColor="FFF2CC")
 
 ws.cell(row=33, column=1, value="級距統計").font = Font(bold=True, name="Microsoft JhengHei", size=12)
-grades = ["優", "甲", "乙", "丙", "丁"]
+grades = ["100", "90-99", "80-89", "70-79", "60-69", "未滿60"]
 for idx, grade in enumerate(grades):
     r = 34 + idx
     ws.cell(row=r, column=1, value=grade).font = Font(name="Microsoft JhengHei")
     ws.cell(row=r, column=2, value=f'=COUNTIF(H2:H30,"{grade}")').font = Font(name="Microsoft JhengHei")
     ws.cell(row=r, column=3, value="人").font = Font(name="Microsoft JhengHei")
 
-widths = [10, 12, 12, 12, 12, 12, 12, 10]
+widths = [10, 12, 12, 12, 12, 12, 12, 12]
 for i, w in enumerate(widths, 1):
     ws.column_dimensions[get_column_letter(i)].width = w
 ws.row_dimensions[1].height = 25
@@ -77,12 +77,13 @@ ws2["A1"].font = Font(bold=True, size=14, name="Microsoft JhengHei")
 instructions = [
     "1. 在「學生成績」工作表中，於 B2:F30 輸入各科分數（藍色字體欄位）。",
     "2. 平均分數與級距會自動計算。",
-    "3. 級距標準：",
-    "   - 90分以上：優",
-    "   - 80-89分：甲",
-    "   - 70-79分：乙",
-    "   - 60-69分：丙",
-    "   - 60分以下：丁",
+    "3. 級距標準（六個級距）：",
+    "   - 100分：100",
+    "   - 90-99分：90-99",
+    "   - 80-89分：80-89",
+    "   - 70-79分：70-79",
+    "   - 60-69分：60-69",
+    "   - 未滿60分：未滿60",
     "4. 底部有全班各科平均與級距人數統計。",
     "5. 可直接修改分數，所有公式會自動更新。",
     "6. 適用於任何安裝 Microsoft Excel 或相容軟體（如 LibreOffice Calc）的電腦。"
@@ -90,7 +91,7 @@ instructions = [
 for i, text in enumerate(instructions, 3):
     ws2[f"A{i}"] = text
     ws2[f"A{i}"].font = Font(name="Microsoft JhengHei", size=11)
-ws2.column_dimensions["A"].width = 80
+ws2.column_dimensions["A"].width = 85
 
 wb.save("student_scores.xlsx")
 print("已產生 student_scores.xlsx")
